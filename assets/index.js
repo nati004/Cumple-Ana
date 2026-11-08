@@ -1,3 +1,20 @@
+const $sliderImg = document.querySelector("#slider-img");
+
+let images = [
+	"./assets/1.webp",
+	"./assets/2.webp",
+	"./assets/3.webp"
+];
+
+let currentIndex = 0;
+
+setInterval(() => {
+	currentIndex = (currentIndex + 1) % images.length;
+	$sliderImg.src = images[currentIndex];
+}, 1000);
+
+
+
 const $containerStars = document.querySelector(".container-stars");
 
 let db = [
