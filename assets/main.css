@@ -7,7 +7,9 @@
 	justify-content: center;
 	align-items: center;
 }
-
+.title p{
+	margin-top: 20px;
+}
 .title img {
 	width: 50vw;
 }
