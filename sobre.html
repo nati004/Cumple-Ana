@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sobre de Carta Interactivo</title>
+  <style>
+    /* Reset básico */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, -apple-system, sans-serif;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Contenedor Principal */
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Texto de Instrucción */
+    .instruction {
+      color: #94a3b8;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* Contenedor del Sobre */
+    .envelope {
+      position: relative;
+      width: 320px;
+      height: 210px;
+      background-color: #d97706;
+      border-bottom-left-radius: 1rem;
+      border-bottom-right-radius: 1rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      cursor: pointer;
+      perspective: 1000px;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Zoom en Hover */
+    .envelope:hover {
+      transform: scale(1.04);
+    }
+
+    .envelope.open:hover {
+      transform: scale(1.01);
+    }
+
+    /* Carta Interna */
+    .letter {
+      position: absolute;
+      top: 12px;
+      bottom: 12px;
+      left: 16px;
+      right: 16px;
+      background-color: #f8fafc;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 1px solid #e2e8f0;
+      z-index: 10;
+      transform: translateY(0);
+      transition: transform 0.5s ease-in-out;
+    }
+
+    /* Recuadro Azul sin Texto */
+    .blue-box {
+      width: 100%;
+      height: 100%;
+      background-color: #2563eb;
+      border-radius: 0.375rem;
+      box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+      transition: opacity 0.2s ease;
+    }
+
+    .blue-box:hover {
+      opacity: 0.9;
+    }
+
+    /* Solapa Superior (Tapa principal) */
+    .envelope-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 0;
+      height: 0;
+      border-left: 160px solid transparent;
+      border-right: 160px solid transparent;
+      border-top: 115px solid #b45309;
+      transform-origin: top;
+      transition: transform 0.5s ease-in-out, z-index 0.3s step-end;
+      z-index: 25;
+      filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.15));
+    }
+
+    /* Solapas Laterales */
+    .flap-left {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      border-top: 105px solid transparent;
+      border-bottom: 105px solid transparent;
+      border-left: 150px solid #d97706;
+      border-top-left-radius: 0.5rem;
+      border-bottom-left-radius: 1rem;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    .flap-right {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      width: 0;
+      border-top: 105px solid transparent;
+      border-bottom: 105px solid transparent;
+      border-right: 150px solid #d97706;
+      border-top-right-radius: 0.5rem;
+      border-bottom-right-radius: 1rem;
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    /* Bolsillo Frontal Inferior */
+    .flap-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 115px;
+      background-color: #f59e0b;
+      border-bottom-left-radius: 1rem;
+      border-bottom-right-radius: 1rem;
+      clip-path: polygon(0% 100%, 100% 100%, 100% 15%, 50% 0%, 0% 15%);
+      z-index: 20;
+      pointer-events: none;
+    }
+
+    /* ESTADO 1: SOBRE ABIERTO */
+    .envelope.open .envelope-flap {
+      transform: rotateX(180deg);
+      z-index: 5;
+    }
+
+    .envelope.open .letter {
+      transform: translateY(-80px);
+      z-index: 15;
+    }
+
+    /* ANIMACIÓN ENTRADA (Extraer y centrar al frente) */
+    .envelope.open .letter.extracted {
+      animation: extractAndCenter 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    /* ANIMACIÓN SALIDA (Regresar al sobre en reversa) */
+    .envelope.open .letter.returning {
+      animation: returnToEnvelope 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    @keyframes extractAndCenter {
+      0% {
+        transform: translateY(-80px);
+        z-index: 15;
+      }
+      /* 1. Subir completamente fuera del sobre */
+      50% {
+        transform: translateY(-220px) scale(1.05);
+        z-index: 40;
+      }
+      /* 2. Descender y centrarse al frente */
+      100% {
+        transform: translateY(0) scale(1.1);
+        z-index: 40;
+      }
+    }
+
+    @keyframes returnToEnvelope {
+      /* 1. Subir desde el centro al punto alto */
+      0% {
+        transform: translateY(0) scale(1.1);
+        z-index: 40;
+      }
+      50% {
+        transform: translateY(-220px) scale(1.05);
+        z-index: 40;
+      }
+      /* 2. Bajar dentro del sobre */
+      100% {
+        transform: translateY(-80px) scale(1);
+        z-index: 15;
+      }
+    }
+
+    /* Botón de Reinicio */
+    .reset-btn {
+      margin-top: 3rem;
+      padding: 0.5rem 1.25rem;
+      background-color: #1e293b;
+      color: #e2e8f0;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      border: 1px solid #334155;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .reset-btn:hover {
+      background-color: #334155;
+    }
+
+    .reset-btn.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Contenedor Principal Centrado -->
+  <div class="wrapper">
+
+    <!-- Mensaje de Instrucción -->
+    <p id="instruction" class="instruction">
+      Haz clic en el sobre para abrirlo
+    </p>
+
+    <!-- Contenedor del Sobre -->
+    <div id="envelope" class="envelope">
+      
+      <!-- Carta Interna -->
+      <div id="letter" class="letter">
+        <!-- Div de color azul sin texto -->
+        <div class="blue-box"></div>
+      </div>
+
+      <!-- Solapa Superior (Tapa que gira) -->
+      <div class="envelope-flap"></div>
+
+      <!-- Solapas Laterales -->
+      <div class="flap-left"></div>
+      <div class="flap-right"></div>
+
+      <!-- Bolsillo Inferior -->
+      <div class="flap-bottom"></div>
+
+    </div>
+
+    <!-- Botón de Reinicio -->
+    <button id="resetBtn" onclick="triggerCloseSequence(event)" class="reset-btn">
+      Cerrar carta y sobre
+    </button>
+  </div>
+
+  <script>
+    const envelope = document.getElementById('envelope');
+    const letter = document.getElementById('letter');
+    const instruction = document.getElementById('instruction');
+    const resetBtn = document.getElementById('resetBtn');
+
+    let state = 'closed'; // 'closed', 'opened', 'extracted', 'animating'
+
+    // Clic en el sobre
+    envelope.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      if (state === 'closed') {
+        envelope.classList.add('open');
+        state = 'opened';
+        instruction.textContent = 'Ahora haz clic en la carta para sacarla';
+      }
+    });
+
+    // Clic en la carta
+    letter.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      if (state === 'opened') {
+        // Sacar carta
+        letter.classList.remove('returning');
+        letter.classList.add('extracted');
+        state = 'extracted';
+        instruction.textContent = 'Haz clic en la carta o en el botón para guardarla';
+        resetBtn.classList.add('visible');
+      } else if (state === 'extracted') {
+        // Guardar carta con animación inversa
+        triggerCloseSequence();
+      }
+    });
+
+    // Secuencia de cierre inverso
+    function triggerCloseSequence(e) {
+      if (e) e.stopPropagation();
+      if (state !== 'extracted' && state !== 'opened') return;
+
+      if (state === 'extracted') {
+        state = 'animating';
+        resetBtn.classList.remove('visible');
+        instruction.textContent = 'Guardando carta...';
+
+        // Iniciar animación inversa (subir del centro -> bajar al sobre)
+        letter.classList.remove('extracted');
+        letter.classList.add('returning');
+
+        // Esperar a que termine la animación de la carta para cerrar la solapa del sobre
+        setTimeout(() => {
+          letter.classList.remove('returning');
+          envelope.classList.remove('open');
+          state = 'closed';
+          instruction.textContent = 'Haz clic en el sobre para abrirlo';
+        }, 800); // Duración equivalente a la animación returnToEnvelope
+      } else if (state === 'opened') {
+        envelope.classList.remove('open');
+        state = 'closed';
+        instruction.textContent = 'Haz clic en el sobre para abrirlo';
+      }
+    }
+  </script>
+</body>
+</html>

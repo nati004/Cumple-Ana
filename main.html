@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Ana Vidal Cumplee</title>
+	<title>Ana Vidal Cumple</title>
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
@@ -11,15 +11,38 @@
 	<link rel="stylesheet" href="./assets/main.css">
 </head>
 <body>
+	<img class="posters" src="./assets/cartel.webp" alt="">	
+	<img class="posters" src="./assets/cartel.webp" alt="">
+	
 	<div class="title">
 		<img id="slider-img" src="./assets/1.webp">
 		<p>Toca las estrellas para leer los mensajes que te han dejado</p>
 	</div>
+
 	<div class="container-stars">
-		<div class="container-star">
-			<!-- <div class="star">
-				<img src="./assets/star.svg">				
-			</div> -->
+		<div class="container-star"></div>
+	</div>
+
+	<!-- Modal / Contenedor del Sobre que aparece al pulsar una estrella -->
+	<div id="envelope-modal" class="envelope-modal">
+		<div class="wrapper">
+			<button id="closeModalBtn" class="close-modal-btn">&times; Cerrar</button>
+
+			<div id="envelope" class="envelope">
+				<div id="letter" class="letter">
+					<div class="blue-box">
+						<!-- Aquí puedes mostrar el mensaje personalizado de cada autor -->
+						<h3 id="letter-author" style="color:white; text-align:center; padding-top:20px; font-family:'Quicksand', sans-serif;"></h3>
+					</div>
+				</div>
+				<div class="envelope-flap"></div>
+				<div class="flap-left"></div>
+				<div class="flap-right"></div>
+				<div class="flap-bottom"></div>
+			</div>
+			<p id="instruction" class="instruction">Haz clic en el sobre para abrirlo</p>
+
+			<button id="resetBtn" class="reset-btn">Cerrar carta y sobre</button>
 		</div>
 	</div>
 
