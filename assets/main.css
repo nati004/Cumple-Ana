@@ -1,11 +1,28 @@
+body{
+	background: #090909;
+	font-family: 'Quicksand', sans-serif;
+	overflow-x: hidden;
+}
+.posters{
+	width: 400px;
+	position: fixed;
+	z-index: 2;
+	top: 50px;
+	right: 0;
+	rotate: 20deg;
+}
+.posters:nth-child(1){
+	right: auto !important;
+	rotate: -20deg;
+}
 .title {
 	width: 100%;
 	height: 100vh;
-	font-family: 'Quicksand', sans-serif;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	color: #fff;
 }
 .title p{
 	margin-top: 20px;
@@ -34,7 +51,8 @@
 	justify-content: center;
 	align-items: center;
 	cursor: pointer;
-	transition: transform 0.3s ease;
+	transition: transform 0.3s ease, left 0.8s cubic-bezier(0.25, 1, 0.5, 1), top 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+	z-index: 5;
 }
 
 .container-stars .star:hover {
@@ -58,7 +76,7 @@
 	background: var(--star-color, #f9f9);
 	filter: blur(10px);
 	border-radius: 100%;
-	opacity: 0.8;
+	opacity: 0.2;
 }
 
 .tooltip {
@@ -68,7 +86,6 @@
 	transform: translateX(-50%) translateY(8px);
 	background: rgba(255, 255, 255, 0.95);
 	color: #333;
-	font-family: 'Quicksand', sans-serif;
 	font-weight: 600;
 	font-size: 14px;
 	padding: 6px 14px;
@@ -86,4 +103,275 @@
 	opacity: 1;
 	visibility: visible;
 	transform: translateX(-50%) translateY(0);
+}
+
+/* ==========================================
+   ESTILOS DEL MODAL Y EL SOBRE INTERACTIVO
+   ========================================== */
+.envelope-modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(9, 9, 9, 0.85);
+	backdrop-filter: blur(8px);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 100;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.4s ease, visibility 0.4s ease;
+	user-select: none;
+}
+
+.envelope-modal.active {
+	opacity: 1;
+	visibility: visible;
+}
+
+.wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+}
+
+.close-modal-btn {
+	position: absolute;
+	top: -60px;
+	background: transparent;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	color: #fff;
+	padding: 6px 14px;
+	border-radius: 20px;
+	cursor: pointer;
+	font-size: 0.9rem;
+	transition: background 0.2s;
+}
+.close-modal-btn:hover {
+	background: rgba(255, 255, 255, 0.1);
+}
+
+.instruction {
+	color: #94a3b8;
+	margin-top: 2rem;
+	font-size: 0.9rem;
+	font-weight: 500;
+	letter-spacing: 0.05em;
+	animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.4; }
+}
+
+.envelope {
+	position: relative;
+	width: 320px;
+	height: 210px;
+	background-color: #d97706;
+	border-bottom-left-radius: 1rem;
+	border-bottom-right-radius: 1rem;
+	box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+	cursor: pointer;
+	perspective: 1000px;
+	transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.envelope:hover {
+	transform: scale(1.04);
+}
+
+.envelope.open:hover {
+	transform: scale(1.01);
+}
+
+.letter {
+	position: absolute;
+	top: 12px;
+	bottom: 12px;
+	left: 16px;
+	right: 16px;
+	background-color: #f8fafc;
+	border-radius: 0.5rem;
+	padding: 1rem;
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	border: 1px solid #e2e8f0;
+	z-index: 10;
+	transform: translateY(0);
+	transition: transform 0.5s ease-in-out;
+}
+
+.blue-box {
+	width: 100%;
+	height: 100%;
+	background-color: #2563eb;
+	border-radius: 0.375rem;
+	box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+	transition: opacity 0.2s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.blue-box:hover {
+	opacity: 0.9;
+}
+
+.envelope-flap {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	width: 0;
+	height: 0;
+	border-left: 160px solid transparent;
+	border-right: 160px solid transparent;
+	border-top: 115px solid #b45309;
+	transform-origin: top;
+	transition: transform 0.5s ease-in-out, z-index 0.3s step-end;
+	z-index: 25;
+	filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.15));
+}
+
+.flap-left {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 0;
+	border-top: 105px solid transparent;
+	border-bottom: 105px solid transparent;
+	border-left: 150px solid #d97706;
+	border-top-left-radius: 0.5rem;
+	border-bottom-left-radius: 1rem;
+	z-index: 20;
+	pointer-events: none;
+}
+
+.flap-right {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	width: 0;
+	border-top: 105px solid transparent;
+	border-bottom: 105px solid transparent;
+	border-right: 150px solid #d97706;
+	border-top-right-radius: 0.5rem;
+	border-bottom-right-radius: 1rem;
+	z-index: 20;
+	pointer-events: none;
+}
+
+.flap-bottom {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 115px;
+	background-color: #f59e0b;
+	border-bottom-left-radius: 1rem;
+	border-bottom-right-radius: 1rem;
+	clip-path: polygon(0% 100%, 100% 100%, 100% 15%, 50% 0%, 0% 15%);
+	z-index: 20;
+	pointer-events: none;
+}
+
+.envelope.open .envelope-flap {
+	transform: rotateX(180deg);
+	z-index: 5;
+}
+
+.envelope.open .letter {
+	transform: translateY(-80px);
+	z-index: 15;
+}
+
+.envelope.open .letter.extracted {
+	animation: extractAndCenter 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.envelope.open .letter.returning {
+	animation: returnToEnvelope 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes extractAndCenter {
+	0% {
+		transform: translateY(-80px);
+		z-index: 15;
+	}
+	50% {
+		transform: translateY(-220px) scale(1.05);
+		z-index: 40;
+	}
+	100% {
+		transform: translateY(0) scale(1.1);
+		z-index: 40;
+	}
+}
+
+@keyframes returnToEnvelope {
+	0% {
+		transform: translateY(0) scale(1.1);
+		z-index: 40;
+	}
+	50% {
+		transform: translateY(-220px) scale(1.05);
+		z-index: 40;
+	}
+	100% {
+		transform: translateY(-80px) scale(1);
+		z-index: 15;
+	}
+}
+
+.reset-btn {
+	margin-top: 3rem;
+	padding: 0.5rem 1.25rem;
+	background-color: #1e293b;
+	color: #e2e8f0;
+	font-size: 0.75rem;
+	font-weight: 600;
+	border-radius: 9999px;
+	border: 1px solid #334155;
+	box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+	cursor: pointer;
+	opacity: 0;
+	pointer-events: none;
+	transition: all 0.3s ease;
+}
+
+.reset-btn:hover {
+	background-color: #334155;
+}
+
+.reset-btn.visible {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+/* Animación de entrada para el sobre */
+.envelope-modal .wrapper {
+	transform: scale(0.5);
+	opacity: 0;
+	transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+}
+
+.envelope-modal.active .wrapper {
+	transform: scale(1);
+	opacity: 1;
+}
+
+/* Transición suave para la estrella clonada */
+.star-animating {
+	will-change: transform, left, top, opacity;
 }
