@@ -2,60 +2,259 @@
 <html lang="es">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Ana Vidal Cumple</title>
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
-	<link rel="stylesheet" href="./assets/reset.css">
-	<link rel="stylesheet" href="./assets/main.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ana Vidal Cumple</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/reset.css">
+    <link rel="stylesheet" href="./assets/main.css">
+    <style>
+        bhtml {
+    background-color: #030814 !important;
+}
+body {
+    background: transparent !important;
+}
+
+        .posters {
+            position: absolute !important;
+            top: 0 !important;
+            width: 280px !important;
+            max-width: 35vw !important;
+            height: auto !important;
+            z-index: 20 !important;
+            pointer-events: none !important;
+        }
+
+        .posters.one { left: 0 !important; }
+        .posters:not(.one) { right: 0 !important; }
+
+        /* Aurora al fondo, detrás de todo el contenido */
+        .aurora-footer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        #auroraCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.4;
+        }
+
+        .aurora-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            mix-blend-mode: screen;
+            filter: blur(90px);
+            opacity: 0.75;
+        }
+
+        .aurora-mist-top {
+            position: absolute;
+            top: -10vh;
+            left: 10vw;
+            width: 80vw;
+            height: 40vh;
+            background: radial-gradient(ellipse at center, rgba(0, 140, 255, 0.25) 0%, rgba(20, 50, 130, 0.08) 50%, transparent 80%);
+            animation: moveTopMist 15s ease-in-out infinite alternate;
+        }
+
+        .aurora-horizon-glow {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120vw;
+            height: 60vh;
+            background: radial-gradient(ellipse at bottom, rgba(0, 180, 255, 0.4) 0%, rgba(0, 90, 200, 0.2) 45%, transparent 75%);
+        }
+
+        .aurora-pillars {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80vh;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(0, 200, 255, 0.08) 6vw,
+                transparent 12vw,
+                rgba(0, 120, 240, 0.12) 18vw,
+                transparent 24vw
+            );
+            mask-image: linear-gradient(to top, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0) 85%);
+            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0) 85%);
+            animation: pulsePillars 12s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulsePillars {
+            0% { opacity: 0.5; transform: scaleY(0.95); }
+            50% { opacity: 0.85; transform: scaleY(1.05); }
+            100% { opacity: 0.6; transform: scaleY(1); }
+        }
+
+        @keyframes moveTopMist {
+            0% { transform: translateX(-4vw) translateY(10px); }
+            100% { transform: translateX(4vw) translateY(-15px); }
+        }
+
+        /* Cometas: encima de la aurora, detrás del contenido */
+        #cometsCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
 </head>
 
 <body>
-	<img class="posters one" src="./assets/cartel.webp" alt="">
-	<img class="posters" src="./assets/cartel.webp" alt="">
+    <img class="posters one" src="./assets/cartel.webp" alt="">
+    <img class="posters" src="./assets/cartel.webp" alt="">
 
-	<div class="title">
-		<img id="slider-img" src="./assets/1.webp" alt="Slider">
-		<p>Toca las estrellas para leer los mensajes que te han dejado</p>
-	</div>
+    <div class="title">
+        <img id="slider-img" src="./assets/1.webp" alt="Slider">
+        <p>Toca las estrellas para leer los mensajes que te han dejado</p>
+    </div>
 
-	<div class="container-stars">
-		<div class="container-star"></div>
-	</div>
+    <div class="container-stars">
+        <div class="container-star"></div>
+    </div>
 
-	<!-- Modal / Contenedor del Sobre -->
-	<div id="envelope-modal" class="envelope-modal">
-		<div class="wrapper">
-			<button id="closeModalBtn" class="close-modal-btn">&times; Cerrar</button>
+    <!-- Modal / Contenedor del Sobre -->
+    <div id="envelope-modal" class="envelope-modal">
+        <div class="wrapper">
+            <button id="closeModalBtn" class="close-modal-btn">&times; Cerrar</button>
 
-			<div id="envelope" class="envelope">
-				<!-- Nombre visible en el sobre antes de abrirlo -->
-				<div id="envelope-author" class="envelope-author-tag">De: ...</div>
+            <div id="envelope" class="envelope">
+                <div id="envelope-author" class="envelope-author-tag">De: ...</div>
 
-				<div id="letter" class="letter">
-					<div class="letter-content">
-						<img id="letter-img" src="" alt="Carta de felicitación">
-					</div>
-				</div>
-				<div class="envelope-flap"></div>
-				<div class="flap-left"></div>
-				<div class="flap-right"></div>
-				<div class="flap-bottom"></div>
-			</div>
-			<p id="instruction" class="instruction">Haz clic en el sobre para abrirlo</p>
+                <div id="letter" class="letter">
+                    <div class="letter-content">
+                        <img id="letter-img" src="" alt="Carta de felicitación">
+                    </div>
+                </div>
+                <div class="envelope-flap"></div>
+                <div class="flap-left"></div>
+                <div class="flap-right"></div>
+                <div class="flap-bottom"></div>
+            </div>
+            <p id="instruction" class="instruction">Haz clic en el sobre para abrirlo</p>
 
-			<button id="resetBtn" class="reset-btn">Cerrar carta y sobre</button>
-		</div>
-	</div>
+            <button id="resetBtn" class="reset-btn">Cerrar carta y sobre</button>
+        </div>
+    </div>
 
-	<!-- SECCIÓN FOOTER CON LA AURORA BOREAL -->
-	<footer class="aurora-footer">
-		<canvas id="auroraCanvas"></canvas>
-	</footer>
+    <!-- AURORA BOREAL DE FONDO -->
+    <footer class="aurora-footer">
+        <canvas id="auroraCanvas"></canvas>
+        <div class="aurora-container">
+            <div class="aurora-mist-top"></div>
+            <div class="aurora-horizon-glow"></div>
+            <div class="aurora-pillars"></div>
+        </div>
+    </footer>
 
-	<script src="./assets/index.js"></script>
+    <!-- CANVAS DE COMETAS -->
+    <canvas id="cometsCanvas"></canvas>
+
+    <script src="./assets/index.js"></script>
+    <script>
+        const cometsCanvas = document.getElementById('cometsCanvas');
+        const cometsCtx = cometsCanvas.getContext('2d');
+        let cWidth, cHeight;
+        const comets = [];
+
+        function resizeCometsCanvas() {
+            cWidth = cometsCanvas.width = window.innerWidth;
+            cHeight = cometsCanvas.height = window.innerHeight;
+        }
+
+        function spawnComet() {
+            const fromTop = Math.random() > 0.35;
+            comets.push({
+                x: fromTop ? Math.random() * cWidth : -20,
+                y: fromTop ? -20 : Math.random() * cHeight * 0.4,
+                length: Math.random() * 50 + 40,
+                speed: Math.random() * 2 + 3,
+                angle: Math.PI / 4 + (Math.random() - 0.5) * 0.25,
+                size: Math.random() * 0.8 + 1,
+                opacity: 1
+            });
+            setTimeout(spawnComet, Math.random() * 2500 + 1500);
+        }
+
+        function animateComets() {
+            cometsCtx.clearRect(0, 0, cWidth, cHeight);
+
+            for (let i = comets.length - 1; i >= 0; i--) {
+                const c = comets[i];
+                c.x += Math.cos(c.angle) * c.speed;
+                c.y += Math.sin(c.angle) * c.speed;
+                c.opacity -= 0.003;
+
+                if (c.opacity <= 0 || c.y > cHeight + 50 || c.x > cWidth + 50) {
+                    comets.splice(i, 1);
+                    continue;
+                }
+
+                const tailX = c.x - Math.cos(c.angle) * c.length;
+                const tailY = c.y - Math.sin(c.angle) * c.length;
+
+                cometsCtx.save();
+                cometsCtx.globalAlpha = c.opacity;
+
+                const grad = cometsCtx.createLinearGradient(c.x, c.y, tailX, tailY);
+                grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+                grad.addColorStop(0.4, 'rgba(179, 229, 252, 0.5)');
+                grad.addColorStop(1, 'rgba(179, 229, 252, 0)');
+                cometsCtx.beginPath();
+                cometsCtx.moveTo(c.x, c.y);
+                cometsCtx.lineTo(tailX, tailY);
+                cometsCtx.strokeStyle = grad;
+                cometsCtx.lineWidth = c.size;
+                cometsCtx.lineCap = 'round';
+                cometsCtx.stroke();
+
+                cometsCtx.beginPath();
+                cometsCtx.arc(c.x, c.y, c.size, 0, Math.PI * 2);
+                cometsCtx.fillStyle = '#ffffff';
+                cometsCtx.shadowBlur = 8;
+                cometsCtx.shadowColor = '#b3e5fc';
+                cometsCtx.fill();
+
+                cometsCtx.restore();
+            }
+
+            requestAnimationFrame(animateComets);
+        }
+
+        window.addEventListener('resize', resizeCometsCanvas);
+        window.addEventListener('load', () => {
+            resizeCometsCanvas();
+            animateComets();
+            spawnComet();
+            setTimeout(spawnComet, 800);
+        });
+    </script>
 </body>
 
 </html>
