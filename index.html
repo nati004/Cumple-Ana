@@ -11,109 +11,69 @@
     <link rel="stylesheet" href="./assets/reset.css">
     <link rel="stylesheet" href="./assets/main.css">
     <style>
-        bhtml {
-    background-color: #030814 !important;
-}
-body {
-    background: transparent !important;
-}
+        html {
+            background-color: #030814 !important;
+        }
+        body {
+            background: transparent !important;
+            font-family: 'Quicksand', sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
 
         .posters {
-            position: absolute !important;
-            top: 0 !important;
+            position: fixed !important;
+            top: 50px !important;
             width: 280px !important;
             max-width: 35vw !important;
             height: auto !important;
-            z-index: 20 !important;
+            z-index: 5 !important;
             pointer-events: none !important;
+            rotate: 20deg;
         }
 
-        .posters.one { left: 0 !important; }
-        .posters:not(.one) { right: 0 !important; }
+        .posters.one { 
+            left: 0 !important; 
+            right: auto !important;
+            rotate: -20deg;
+        }
+        .posters:not(.one) { 
+            right: 0 !important; 
+        }
 
-        /* Aurora al fondo, detrás de todo el contenido */
-        .aurora-footer {
-            position: fixed;
+        /* --- AURORA BOREAL DE FONDO (FIJA EN EL CENTRO/FONDO) --- */
+.aurora-footer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #02040a;
+    overflow: hidden;
+    z-index: -1; /* Detrás de todo el contenido */
+    pointer-events: none;
+}
+
+#auroraCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+}
+
+        .aurora-footer::before {
+            content: "";
+            position: absolute;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(to bottom, rgba(13, 18, 29, 0.95) 0%, rgba(2, 4, 10, 0) 100%);
+            z-index: 3;
             pointer-events: none;
-            overflow: hidden;
-            z-index: -1;
         }
 
-        #auroraCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.4;
-        }
-
-        .aurora-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            mix-blend-mode: screen;
-            filter: blur(90px);
-            opacity: 0.75;
-        }
-
-        .aurora-mist-top {
-            position: absolute;
-            top: -10vh;
-            left: 10vw;
-            width: 80vw;
-            height: 40vh;
-            background: radial-gradient(ellipse at center, rgba(0, 140, 255, 0.25) 0%, rgba(20, 50, 130, 0.08) 50%, transparent 80%);
-            animation: moveTopMist 15s ease-in-out infinite alternate;
-        }
-
-        .aurora-horizon-glow {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 120vw;
-            height: 60vh;
-            background: radial-gradient(ellipse at bottom, rgba(0, 180, 255, 0.4) 0%, rgba(0, 90, 200, 0.2) 45%, transparent 75%);
-        }
-
-        .aurora-pillars {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 80vh;
-            background: repeating-linear-gradient(
-                90deg,
-                transparent 0%,
-                rgba(0, 200, 255, 0.08) 6vw,
-                transparent 12vw,
-                rgba(0, 120, 240, 0.12) 18vw,
-                transparent 24vw
-            );
-            mask-image: linear-gradient(to top, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0) 85%);
-            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.9) 10%, rgba(0,0,0,0) 85%);
-            animation: pulsePillars 12s ease-in-out infinite alternate;
-        }
-
-        @keyframes pulsePillars {
-            0% { opacity: 0.5; transform: scaleY(0.95); }
-            50% { opacity: 0.85; transform: scaleY(1.05); }
-            100% { opacity: 0.6; transform: scaleY(1); }
-        }
-
-        @keyframes moveTopMist {
-            0% { transform: translateX(-4vw) translateY(10px); }
-            100% { transform: translateX(4vw) translateY(-15px); }
-        }
-
-        /* Cometas: encima de la aurora, detrás del contenido */
         #cometsCanvas {
             position: fixed;
             top: 0;
@@ -127,8 +87,8 @@ body {
 </head>
 
 <body>
-    <img class="posters one" src="./assets/cartel.webp" alt="">
-    <img class="posters" src="./assets/cartel.webp" alt="">
+    <img class="posters one" src="./assets/cartel.webp" alt="Cartel decorativo izquierdo">
+    <img class="posters" src="./assets/cartel.webp" alt="Cartel decorativo derecho">
 
     <div class="title">
         <img id="slider-img" src="./assets/1.webp" alt="Slider">
@@ -166,18 +126,43 @@ body {
     <!-- AURORA BOREAL DE FONDO -->
     <footer class="aurora-footer">
         <canvas id="auroraCanvas"></canvas>
-        <div class="aurora-container">
-            <div class="aurora-mist-top"></div>
-            <div class="aurora-horizon-glow"></div>
-            <div class="aurora-pillars"></div>
-        </div>
     </footer>
 
     <!-- CANVAS DE COMETAS -->
     <canvas id="cometsCanvas"></canvas>
 
+    <div class="footer-banner">
+        <img id="footer-slider-img" src="./assets/hbd-1.webp" alt="Happy Birthday Slider" />
+    </div>
+
+    <div class="gift-section">
+        <div id="gift-box" class="gift-box">
+            <div class="gift-lid">
+                <div class="gift-bow"></div>
+            </div>
+            <div class="gift-body">
+                <div class="gift-ribbon-vertical"></div>
+            </div>
+        </div>
+        <p class="gift-instruction">Toca la caja para abrir tu regalo</p>
+    </div>
+
+    <!-- MODAL O CONTENEDOR DEL VIDEO -->
+    <div id="video-modal" class="video-modal">
+        <div class="video-wrapper">
+            <button id="closeVideoBtn" class="close-video-btn">&times; Cerrar</button>
+            <video id="gift-video" controls playsinline>
+                <!-- Cambia por la ruta de tu video -->
+                <source src="./assets/REGALO DE LOS OG.mp4" type="video/mp4">
+                Tu navegador no soporta videos.
+            </video>
+        </div>
+    </div>
+
+
     <script src="./assets/index.js"></script>
     <script>
+        // Script de cometas optimizado
         const cometsCanvas = document.getElementById('cometsCanvas');
         const cometsCtx = cometsCanvas.getContext('2d');
         let cWidth, cHeight;
@@ -226,6 +211,7 @@ body {
                 grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
                 grad.addColorStop(0.4, 'rgba(179, 229, 252, 0.5)');
                 grad.addColorStop(1, 'rgba(179, 229, 252, 0)');
+                
                 cometsCtx.beginPath();
                 cometsCtx.moveTo(c.x, c.y);
                 cometsCtx.lineTo(tailX, tailY);
