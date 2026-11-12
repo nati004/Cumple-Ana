@@ -2,321 +2,345 @@
 // 1. ENGINE DE AURORA BOREAL (FOOTER)
 // ==========================================
 class AuroraEngine {
-	constructor(canvas) {
-		this.canvas = canvas;
-		this.ctx = canvas.getContext('2d', { alpha: false });
-		this.footerContainer = canvas.parentElement;
-		
-		this.speed = 0.8;
-		this.intensity = 1.25;
-		this.layerCount = 5;
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d', { alpha: false });
+        this.footerContainer = canvas.parentElement;
+        
+        this.speed = 0.8;
+        this.intensity = 1.25;
+        this.layerCount = 5;
 
-		this.solarCrimsonTheme = [
-			{ stop: 0.0, color: 'rgba(0, 0, 0, 0)' },
-			{ stop: 0.25, color: 'rgba(239, 68, 68, ' },
-			{ stop: 0.55, color: 'rgba(245, 158, 11, ' },
-			{ stop: 0.80, color: 'rgba(253, 224, 71, ' },
-			{ stop: 1.0, color: 'rgba(0, 0, 0, 0)' }
-		];
+        this.solarCrimsonTheme = [
+            { stop: 0.0, color: 'rgba(0, 0, 0, 0)' },
+            { stop: 0.25, color: 'rgba(239, 68, 68, ' },
+            { stop: 0.55, color: 'rgba(245, 158, 11, ' },
+            { stop: 0.80, color: 'rgba(253, 224, 71, ' },
+            { stop: 1.0, color: 'rgba(0, 0, 0, 0)' }
+        ];
 
-		this.time = 0;
-		this.lastFrameTime = performance.now();
-		this.pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
-		
-		this.stars = [];
-		this.mountainCanvas = document.createElement('canvas');
-		this.mountainCtx = this.mountainCanvas.getContext('2d');
+        this.time = 0;
+        this.lastFrameTime = performance.now();
+        this.pixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+        
+        this.stars = [];
+        this.mountainCanvas = document.createElement('canvas');
+        this.mountainCtx = this.mountainCanvas.getContext('2d');
 
-		this.init();
-	}
+        this.init();
+    }
 
-	init() {
-		this.resize();
-		this.generateStars();
-		this.generateMountains();
-		
-		window.addEventListener('resize', () => {
-			this.resize();
-			this.generateStars();
-			this.generateMountains();
-		});
-	}
+    init() {
+        this.resize();
+        this.generateStars();
+        this.generateMountains();
+        
+        window.addEventListener('resize', () => {
+            this.resize();
+            this.generateStars();
+            this.generateMountains();
+        });
+    }
 
-	resize() {
-		this.width = this.footerContainer.clientWidth;
-		this.height = this.footerContainer.clientHeight;
+    resize() {
+        this.width = this.footerContainer.clientWidth;
+        this.height = this.footerContainer.clientHeight;
 
-		this.canvas.width = Math.floor(this.width * this.pixelRatio);
-		this.canvas.height = Math.floor(this.height * this.pixelRatio);
-		this.ctx.scale(this.pixelRatio, this.pixelRatio);
-	}
+        this.canvas.width = Math.floor(this.width * this.pixelRatio);
+        this.canvas.height = Math.floor(this.height * this.pixelRatio);
+        this.ctx.scale(this.pixelRatio, this.pixelRatio);
+    }
 
-	generateStars() {
-		this.stars = [];
-		const count = Math.floor((this.width * this.height) / 2400);
-		
-		for (let i = 0; i < count; i++) {
-			this.stars.push({
-				x: Math.random() * this.width,
-				y: Math.random() * (this.height * 0.75),
-				radius: Math.random() * 1.1 + 0.3,
-				alpha: Math.random() * 0.85 + 0.15,
-				twinkleSpeed: Math.random() * 0.02 + 0.005,
-				phase: Math.random() * Math.PI * 2
-			});
-		}
-	}
+    generateStars() {
+        this.stars = [];
+        const count = Math.floor((this.width * this.height) / 2400);
+        
+        for (let i = 0; i < count; i++) {
+            this.stars.push({
+                x: Math.random() * this.width,
+                y: Math.random() * (this.height * 0.75),
+                radius: Math.random() * 1.1 + 0.3,
+                alpha: Math.random() * 0.85 + 0.15,
+                twinkleSpeed: Math.random() * 0.02 + 0.005,
+                phase: Math.random() * Math.PI * 2
+            });
+        }
+    }
 
-	generateMountains() {
-		this.mountainCanvas.width = this.canvas.width;
-		this.mountainCanvas.height = this.canvas.height;
-		const mCtx = this.mountainCtx;
-		mCtx.scale(this.pixelRatio, this.pixelRatio);
-		
-		mCtx.clearRect(0, 0, this.width, this.height);
-		
-		mCtx.fillStyle = '#06050b';
-		mCtx.beginPath();
-		mCtx.moveTo(0, this.height);
-		for (let x = 0; x <= this.width; x += 25) {
-			const y = this.height * 0.76 + Math.sin(x * 0.004) * 45 + Math.cos(x * 0.012) * 20;
-			mCtx.lineTo(x, y);
-		}
-		mCtx.lineTo(this.width, this.height);
-		mCtx.closePath();
-		mCtx.fill();
+    generateMountains() {
+        this.mountainCanvas.width = this.canvas.width;
+        this.mountainCanvas.height = this.canvas.height;
+        const mCtx = this.mountainCtx;
+        mCtx.scale(this.pixelRatio, this.pixelRatio);
+        
+        mCtx.clearRect(0, 0, this.width, this.height);
+        
+        mCtx.fillStyle = '#06050b';
+        mCtx.beginPath();
+        mCtx.moveTo(0, this.height);
+        for (let x = 0; x <= this.width; x += 25) {
+            const y = this.height * 0.76 + Math.sin(x * 0.004) * 45 + Math.cos(x * 0.012) * 20;
+            mCtx.lineTo(x, y);
+        }
+        mCtx.lineTo(this.width, this.height);
+        mCtx.closePath();
+        mCtx.fill();
 
-		mCtx.fillStyle = '#020104';
-		mCtx.beginPath();
-		mCtx.moveTo(0, this.height);
-		for (let x = 0; x <= this.width; x += 15) {
-			const y = this.height * 0.83 + Math.sin(x * 0.008) * 35 + Math.sin(x * 0.025) * 15;
-			mCtx.lineTo(x, y);
-		}
-		mCtx.lineTo(this.width, this.height);
-		mCtx.closePath();
-		mCtx.fill();
+        mCtx.fillStyle = '#020104';
+        mCtx.beginPath();
+        mCtx.moveTo(0, this.height);
+        for (let x = 0; x <= this.width; x += 15) {
+            const y = this.height * 0.83 + Math.sin(x * 0.008) * 35 + Math.sin(x * 0.025) * 15;
+            mCtx.lineTo(x, y);
+        }
+        mCtx.lineTo(this.width, this.height);
+        mCtx.closePath();
+        mCtx.fill();
 
-		mCtx.fillStyle = '#010002';
-		for (let x = 5; x < this.width; x += 10 + Math.random() * 18) {
-			const treeHeight = 16 + Math.random() * 26;
-			const baseY = this.height * 0.84 + Math.sin(x * 0.008) * 30;
-			
-			mCtx.beginPath();
-			mCtx.moveTo(x, baseY - treeHeight);
-			mCtx.lineTo(x - 5, baseY);
-			mCtx.lineTo(x + 5, baseY);
-			mCtx.closePath();
-			mCtx.fill();
-		}
-	}
+        mCtx.fillStyle = '#010002';
+        for (let x = 5; x < this.width; x += 10 + Math.random() * 18) {
+            const treeHeight = 16 + Math.random() * 26;
+            const baseY = this.height * 0.84 + Math.sin(x * 0.008) * 30;
+            
+            mCtx.beginPath();
+            mCtx.moveTo(x, baseY - treeHeight);
+            mCtx.lineTo(x - 5, baseY);
+            mCtx.lineTo(x + 5, baseY);
+            mCtx.closePath();
+            mCtx.fill();
+        }
+    }
 
-	drawSky() {
-		const skyGradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
-		
-		// Transición desde la oscuridad nocturna arriba hasta un "amanecer" cálido abajo
-		skyGradient.addColorStop(0.0, '#040207'); // Oscuridad arriba
-		skyGradient.addColorStop(0.5, '#0b0410'); // Carmesí nocturno medio
-		skyGradient.addColorStop(0.8, '#2a1215'); // Transición cálida / rojiza del amanecer
-		skyGradient.addColorStop(1.0, '#4a2311'); // Brillo ámbar/dorado suave justo en el horizonte (abajo)
-		
-		this.ctx.fillStyle = skyGradient;
-		this.ctx.fillRect(0, 0, this.width, this.height);
-	}
+    drawSky() {
+        const skyGradient = this.ctx.createLinearGradient(0, 0, 0, this.height);
+        skyGradient.addColorStop(0.0, '#040207');
+        skyGradient.addColorStop(0.5, '#0b0410');
+        skyGradient.addColorStop(0.8, '#2a1215');
+        skyGradient.addColorStop(1.0, '#4a2311');
+        
+        this.ctx.fillStyle = skyGradient;
+        this.ctx.fillRect(0, 0, this.width, this.height);
+    }
 
-	drawStars() {
-		this.ctx.save();
-		for (let i = 0; i < this.stars.length; i++) {
-			const s = this.stars[i];
-			s.phase += s.twinkleSpeed;
-			const currentAlpha = s.alpha * (0.6 + 0.4 * Math.sin(s.phase));
-			
-			this.ctx.fillStyle = `rgba(255, 245, 230, ${currentAlpha})`;
-			this.ctx.beginPath();
-			this.ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
-			this.ctx.fill();
-		}
-		this.ctx.restore();
-	}
+    drawStars() {
+        this.ctx.save();
+        for (let i = 0; i < this.stars.length; i++) {
+            const s = this.stars[i];
+            s.phase += s.twinkleSpeed;
+            const currentAlpha = s.alpha * (0.6 + 0.4 * Math.sin(s.phase));
+            
+            this.ctx.fillStyle = `rgba(255, 245, 230, ${currentAlpha})`;
+            this.ctx.beginPath();
+            this.ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.restore();
+    }
 
-	drawAuroraCurtains() {
-		this.ctx.save();
-		this.ctx.globalCompositeOperation = 'screen';
+    drawAuroraCurtains() {
+        this.ctx.save();
+        this.ctx.globalCompositeOperation = 'screen';
 
-		const baseHeight = this.height * 0.42;
+        const baseHeight = this.height * 0.42;
 
-		for (let layer = 0; layer < this.layerCount; layer++) {
-			const layerYOffset = baseHeight + (layer * 30) - (this.layerCount * 12);
-			const ribbonHeight = 230 + layer * 35;
+        for (let layer = 0; layer < this.layerCount; layer++) {
+            const layerYOffset = baseHeight + (layer * 30) - (this.layerCount * 12);
+            const ribbonHeight = 230 + layer * 35;
 
-			const gradient = this.ctx.createLinearGradient(0, layerYOffset - ribbonHeight, 0, layerYOffset + 70);
-			
-			this.solarCrimsonTheme.forEach(pt => {
-				let alphaVal = 0;
-				if (pt.stop > 0 && pt.stop < 1) {
-					// CAMBIO: Bajamos de 0.24 a 0.16 para que sea más translúcida y sutil
-					alphaVal = (0.1 / (layer * 0.3 + 1)) * this.intensity;
-				}
-				gradient.addColorStop(pt.stop, `${pt.color}${alphaVal})`);
-			});
+            const gradient = this.ctx.createLinearGradient(0, layerYOffset - ribbonHeight, 0, layerYOffset + 70);
+            
+            this.solarCrimsonTheme.forEach(pt => {
+                let alphaVal = 0;
+                if (pt.stop > 0 && pt.stop < 1) {
+                    alphaVal = (0.1 / (layer * 0.3 + 1)) * this.intensity;
+                }
+                gradient.addColorStop(pt.stop, `${pt.color}${alphaVal})`);
+            });
 
-			this.ctx.fillStyle = gradient;
-			this.ctx.beginPath();
+            this.ctx.fillStyle = gradient;
+            this.ctx.beginPath();
 
-			const step = 8;
-			this.ctx.moveTo(0, this.height);
+            const step = 8;
+            this.ctx.moveTo(0, this.height);
 
-			for (let x = 0; x <= this.width + step; x += step) {
-				const wave1 = Math.sin(x * 0.002 + this.time * 0.4 + layer * 1.4) * 65;
-				const wave2 = Math.cos(x * 0.005 - this.time * 0.25 + layer) * 35;
-				const wave3 = Math.sin(x * 0.008 + this.time * 0.5) * 18;
+            for (let x = 0; x <= this.width + step; x += step) {
+                const wave1 = Math.sin(x * 0.002 + this.time * 0.4 + layer * 1.4) * 65;
+                const wave2 = Math.cos(x * 0.005 - this.time * 0.25 + layer) * 35;
+                const wave3 = Math.sin(x * 0.008 + this.time * 0.5) * 18;
 
-				const y = layerYOffset + wave1 + wave2 + wave3 - ribbonHeight;
-				
-				if (x === 0) {
-					this.ctx.moveTo(x, y);
-				} else {
-					this.ctx.lineTo(x, y);
-				}
-			}
+                const y = layerYOffset + wave1 + wave2 + wave3 - ribbonHeight;
+                
+                if (x === 0) {
+                    this.ctx.moveTo(x, y);
+                } else {
+                    this.ctx.lineTo(x, y);
+                }
+            }
 
-			for (let x = this.width; x >= -step; x -= step) {
-				const wave1 = Math.sin(x * 0.002 + this.time * 0.4 + layer * 1.4) * 65;
-				const wave2 = Math.cos(x * 0.005 - this.time * 0.25 + layer) * 35;
-				const wave3 = Math.sin(x * 0.008 + this.time * 0.5) * 18;
+            for (let x = this.width; x >= -step; x -= step) {
+                const wave1 = Math.sin(x * 0.002 + this.time * 0.4 + layer * 1.4) * 65;
+                const wave2 = Math.cos(x * 0.005 - this.time * 0.25 + layer) * 35;
+                const wave3 = Math.sin(x * 0.008 + this.time * 0.5) * 18;
 
-				const y = layerYOffset + wave1 + wave2 + wave3 + 45;
-				this.ctx.lineTo(x, y);
-			}
+                const y = layerYOffset + wave1 + wave2 + wave3 + 45;
+                this.ctx.lineTo(x, y);
+            }
 
-			this.ctx.closePath();
-			this.ctx.fill();
-		}
+            this.ctx.closePath();
+            this.ctx.fill();
+        }
 
-		this.ctx.restore();
-	}
+        this.ctx.restore();
+    }
 
-	drawLandscape() {
-		this.ctx.drawImage(this.mountainCanvas, 0, 0, this.width, this.height);
-	}
+    drawLandscape() {
+        this.ctx.drawImage(this.mountainCanvas, 0, 0, this.width, this.height);
+    }
 
-	render() {
-		const now = performance.now();
-		const dt = (now - this.lastFrameTime) / 1000;
-		this.lastFrameTime = now;
+    render() {
+        const now = performance.now();
+        const dt = (now - this.lastFrameTime) / 1000;
+        this.lastFrameTime = now;
 
-		this.time += dt * this.speed;
+        this.time += dt * this.speed;
 
-		this.drawSky();
-		this.drawStars();
-		this.drawAuroraCurtains();
-		this.drawLandscape();
+        this.drawSky();
+        this.drawStars();
+        this.drawAuroraCurtains();
+        this.drawLandscape();
 
-		requestAnimationFrame(() => this.render());
-	}
+        requestAnimationFrame(() => this.render());
+    }
 
-	start() {
-		requestAnimationFrame(() => this.render());
-	}
+    start() {
+        requestAnimationFrame(() => this.render());
+    }
 }
 
 window.addEventListener('load', () => {
-	const canvas = document.getElementById('auroraCanvas');
-	if (canvas) {
-		const engine = new AuroraEngine(canvas);
-		engine.start();
-	}
+    const canvas = document.getElementById('auroraCanvas');
+    if (canvas) {
+        const engine = new AuroraEngine(canvas);
+        engine.start();
+    }
 });
 
 // ==========================================
 // 2. SLIDER DE IMÁGENES
 // ==========================================
-const $sliderImg = document.querySelector("#slider-img");
-let images = ["./assets/1.webp", "./assets/2.webp", "./assets/3.webp"];
-let currentIndex = 0;
+function initSlider(selector, imageArray, intervalTime = 1000) {
+    const $imgElement = document.querySelector(selector);
+    if (!$imgElement) return;
 
-if ($sliderImg) {
-	setInterval(() => {
-		currentIndex = (currentIndex + 1) % images.length;
-		$sliderImg.src = images[currentIndex];
-	}, 1000);
+    let currentIndex = 0;
+    setInterval(() => {
+        currentIndex = (currentIndex + 1) % imageArray.length;
+        $imgElement.src = imageArray[currentIndex];
+    }, intervalTime);
 }
+
+// Slider principal (arriba)
+initSlider("#slider-img", ["./assets/1.webp", "./assets/2.webp", "./assets/3.webp"], 1000);
+
+// Slider inferior (las letras de Happy Birthday)
+// Ajusta las rutas con los nombres reales de tus imágenes de letras
+initSlider("#footer-slider-img", ["./assets/hbd-1.webp", "./assets/hbd-2.webp", "./assets/hbd-3.webp"], 1000);
 
 // ==========================================
 // 3. GENERACIÓN DE ESTRELLAS INTERACTIVAS
 // ==========================================
 const $containerStars = document.querySelector(".container-stars");
 
-let db = [
-	{ "name": "Nati", "color": "#3b82f6", "range": 1, "image": "./database/1600w-UmAZgx8HXa0.webp" },
-	{ "name": "Sammi", "color": "#ef4444", "range": 2, "image": "./database/1600w-UmAZgx8HXa0.webp" },
-	{ "name": "Ana", "color": "#eab308", "range": 3, "image": "./database/568w-kicFvFb6tZo.jpg" },
-	{ "name": "Sammi", "color": "#ef4444", "range": 2, "image": "./database/1600w-UmAZgx8HXa0.webp" },
-	{ "name": "Ana", "color": "#eab308", "range": 3, "image": "./database/568w-kicFvFb6tZo.jpg" },
-	{ "name": "Sammi", "color": "#ef4444", "range": 2, "image": "./database/1600w-UmAZgx8HXa0.webp" },
-	{ "name": "Ana", "color": "#eab308", "range": 3, "image": "./database/568w-kicFvFb6tZo.jpg" },
+const db = [
+    { "name": "Rebel", "color": "#2eb9d9", "range": 1, "image": "./database/REBEL (1).jpg" },
+    { "name": "Chino", "color": "#96e388", "range": 2, "image": "./database/CHINO.jpg" },
+    { "name": "EYMateo", "color": "#413fd1", "range": 2, "image": "./database/EYYMATEO.PNG" },
+    { "name": "Emsi", "color": "#592bad", "range": 2, "image": "./database/GoodJoeSale.PNG" },
+    { "name": "Dianna", "color": "#d4bf61", "range": 3, "image": "./database/diana.PNG" },
+    { "name": "Owen", "color": "#55b5d9", "range": 1, "image": "./database/OWEN (1).jpg" },
+    { "name": "AVIL", "color": "#55b5d9", "range": 2, "image": "./database/AVIL.jpg" },
+    { "name": "Sammi", "color": "#6b30b3", "range": 1, "image": "./database/SAMMI.png" },
+    { "name": "Ness", "color": "#d8c7ed", "range": 3, "image": "./database/ness.PNG" },
+    { "name": "Barakiel", "color": "#d4874c", "range": 2, "image": "./database/BARAKIEL.jpg" },
+    { "name": "DannyGab", "color": "#851528", "range": 2, "image": "./database/danyygab.PNG" },
+    { "name": "Chris", "color": "#26ad7e", "range": 2, "image": "./database/CHRIS.jpg" },
+    { "name": "DanniSau", "color": "#56c4c3", "range": 2, "image": "./database/DANISAU.PNG" },
+    { "name": "Angie x Dannyl", "color": "#e866d0", "range": 1, "image": "./database/ANGIE Y DANNYL.jpg" },
+    { "name": "Ale Papoy", "color": "#eb3d77", "range": 2, "image": "./database/Alepapoy.PNG" },
+    { "name": "Yaqz", "color": "#9b2bba", "range": 2, "image": "./database/yaqz.PNG" },
+    { "name": "Milly", "color": "#de28ad", "range": 3, "image": "./database/MILLY.jpg" },
+    { "name": "Jhostyn", "color": "#65b839", "range": 2, "image": "./database/JOSTHYNCOSTA.JPG" },
+    { "name": "Rozty", "color": "#f2fffb", "range": 2, "image": "./database/rozti.PNG" },
+    { "name": "Merlin", "color": "#cf3723", "range": 2, "image": "./database/merlin.jpg" },
+    { "name": "Luz", "color": "#9b2bba", "range": 3, "image": "./database/LUZ.jpg" },
+    { "name": "Adriana", "color": "#db30ab", "range": 2, "image": "./database/ADRI.jpg" },
+    { "name": "Impu", "color": "#3052db", "range": 1, "image": "./database/impu.jpg" },
+    { "name": "Alo", "color": "#c41b27", "range": 2, "image": "./database/ALO.png" },
+    { "name": "Marisela", "color": "#bf6f28", "range": 3, "image": "./database/mari.PNG" },
+    { "name": "Kim", "color": "#bf2885", "range": 2, "image": "./database/KIM.PNG" },
+    { "name": "Jimmy", "color": "#a4ba4a", "range": 2, "image": "./database/jimmy.PNG" },
+    { "name": "Salm", "color": "#70c1e0", "range": 2, "image": "./database/salm.jpg" },
+    { "name": "Yair", "color": "#b0b6b8", "range": 2, "image": "./database/YAIR.jpg" },
+    { "name": "Jxta", "color": "#963dd1", "range": 1, "image": "./database/JXTA.jpg" },
+    { "name": "Nati", "color": "#d13da5", "range": 1, "image": "./database/nati.png" },
 ];
 
 let lastZone = "";
 let currentY = 0;
 
 if ($containerStars) {
-	db.forEach((star, index) => {
-		const $div = document.createElement("div");
-		$div.classList.add("star");
-		
-		$div.innerHTML = `
-			<div class="tooltip">${star.name}</div>
-			<svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-				<path fill="currentColor" d="M63.893,24.277c-0.238-0.711-0.854-1.229-1.595-1.343l-19.674-3.006L33.809,1.15	C33.479,0.448,32.773,0,31.998,0s-1.48,0.448-1.811,1.15l-8.815,18.778L1.698,22.935c-0.741,0.113-1.356,0.632-1.595,1.343	c-0.238,0.71-0.059,1.494,0.465,2.031l14.294,14.657L11.484,61.67c-0.124,0.756,0.195,1.517,0.822,1.957	c0.344,0.243,0.747,0.366,1.151,0.366c0.332,0,0.666-0.084,0.968-0.25l17.572-9.719l17.572,9.719c0.302,0.166,0.636,0.25,0.968,0.25	c0.404,0,0.808-0.123,1.151-0.366c0.627-0.44,0.946-1.201,0.822-1.957l-3.378-20.704l14.294-14.657	C63.951,25.771,64.131,24.987,63.893,24.277z"/>
-			</svg>
-		`;
+    db.forEach((star, index) => {
+        const $div = document.createElement("div");
+        $div.classList.add("star");
+        
+        $div.innerHTML = `
+            <div class="tooltip">${star.name}</div>
+            <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+                <path fill="currentColor" d="M63.893,24.277c-0.238-0.711-0.854-1.229-1.595-1.343l-19.674-3.006L33.809,1.15	C33.479,0.448,32.773,0,31.998,0s-1.48,0.448-1.811,1.15l-8.815,18.778L1.698,22.935c-0.741,0.113-1.356,0.632-1.595,1.343	c-0.238,0.71-0.059,1.494,0.465,2.031l14.294,14.657L11.484,61.67c-0.124,0.756,0.195,1.517,0.822,1.957	c0.344,0.243,0.747,0.366,1.151,0.366c0.332,0,0.666-0.084,0.968-0.25l17.572-9.719l17.572,9.719c0.302,0.166,0.636,0.25,0.968,0.25	c0.404,0,0.808-0.123,1.151-0.366c0.627-0.44,0.946-1.201,0.822-1.957l-3.378-20.704l14.294-14.657	C63.951,25.771,64.131,24.987,63.893,24.277z"/>
+            </svg>
+        `;
 
-		let size = "80px";
-		if (star.range === 1) size = "90px";
-		else if (star.range === 2) size = "65px";
-		else if (star.range === 3) size = "45px";
-		
-		const $svg = $div.querySelector("svg");
-		$svg.style.width = size;
-		$svg.style.height = size;
-		$svg.style.color = star.color;
-		$svg.style.filter = `drop-shadow(0 0 8px ${star.color})`;
+        let size = "80px";
+        if (star.range === 1) size = "90px";
+        else if (star.range === 2) size = "65px";
+        else if (star.range === 3) size = "45px";
+        
+        const $svg = $div.querySelector("svg");
+        $svg.style.width = size;
+        $svg.style.height = size;
+        $svg.style.color = star.color;
+        $svg.style.filter = `drop-shadow(0 0 8px ${star.color})`;
 
-		let availableZones = ["left", "center", "right"];
-		if (lastZone !== "") availableZones = availableZones.filter(z => z !== lastZone);
+        let availableZones = ["left", "center", "right"];
+        if (lastZone !== "") availableZones = availableZones.filter(z => z !== lastZone);
 
-		let chosenZone = availableZones[Math.floor(Math.random() * availableZones.length)];
-		lastZone = chosenZone;
+        let chosenZone = availableZones[Math.floor(Math.random() * availableZones.length)];
+        lastZone = chosenZone;
 
-		let positionX = 0;
-		if (chosenZone === "left") positionX = Math.random() * 25;
-		else if (chosenZone === "center") positionX = 35 + Math.random() * 30;
-		else positionX = 70 + Math.random() * 25;
+        let positionX = 0;
+        if (chosenZone === "left") positionX = Math.random() * 25;
+        else if (chosenZone === "center") positionX = 35 + Math.random() * 30;
+        else positionX = 70 + Math.random() * 25;
 
-		if (index === 0) currentY = 0;
-		else {
-			let verticalDistance = 250 + Math.floor(Math.random() * 70);
-			currentY += verticalDistance;
-		}
+        currentY = (index === 0) ? 0 : currentY + (250 + Math.floor(Math.random() * 70));
 
-		let rotation = Math.floor(Math.random() * 30) - 15;
+        let rotation = Math.floor(Math.random() * 30) - 15;
 
-		$div.style.position = "absolute";
-		$div.style.left = positionX + "%";
-		$div.style.top = currentY + "px";
-		$div.style.transform = `rotate(${rotation}deg)`;
-		$div.style.setProperty("--star-rotation", `${rotation}deg`);
-		$div.style.setProperty("--star-color", star.color);
+        $div.style.position = "absolute";
+        $div.style.left = positionX + "%";
+        $div.style.top = currentY + "px";
+        $div.style.transform = `rotate(${rotation}deg)`;
+        $div.style.setProperty("--star-rotation", `${rotation}deg`);
+        $div.style.setProperty("--star-color", star.color);
 
-		$div.addEventListener('click', () => {
-			animateStarToCenter($div, star);
-		});
+        $div.addEventListener('click', () => {
+            animateStarToCenter($div, star);
+        });
 
-		$containerStars.appendChild($div);
-	});
+        $containerStars.appendChild($div);
+    });
 
-	$containerStars.style.height = `${currentY + 150}px`;
+    $containerStars.style.height = `${currentY + 150}px`;
 }
 
 // ==========================================
@@ -328,203 +352,125 @@ const letter = document.getElementById('letter');
 const instruction = document.getElementById('instruction');
 const resetBtn = document.getElementById('resetBtn');
 const closeModalBtn = document.getElementById('closeModalBtn');
-const letterAuthor = document.getElementById('letter-author');
+const envelopeAuthor = document.getElementById('envelope-author');
+const letterImg = document.getElementById('letter-img'); 
 
 let state = 'closed';
 
-const envelopeAuthor = document.getElementById('envelope-author'); // Seleccionamos el elemento del sobre
-const letterImg = document.getElementById('letter-img'); 
-
 function animateStarToCenter(originalStar, starData) {
-	const rect = originalStar.getBoundingClientRect();
+    const rect = originalStar.getBoundingClientRect();
 
-	// Asignamos la imagen y el nombre en el sobre antes de abrir el modal
-	letterImg.src = starData.image; 
-	envelopeAuthor.textContent = `De: ${starData.name}`; // <-- Aquí se actualiza el sobre
+    letterImg.src = starData.image; 
+    envelopeAuthor.textContent = `De: ${starData.name}`;
 
-	const starClone = originalStar.cloneNode(true);
-	starClone.classList.add('star-animating');
-	
-	starClone.style.position = 'fixed';
-	starClone.style.left = `${rect.left}px`;
-	starClone.style.top = `${rect.top}px`;
-	starClone.style.margin = '0';
-	starClone.style.zIndex = '9999';
-	starClone.style.pointerEvents = 'none';
+    const starClone = originalStar.cloneNode(true);
+    starClone.classList.add('star-animating');
+    
+    starClone.style.position = 'fixed';
+    starClone.style.left = `${rect.left}px`;
+    starClone.style.top = `${rect.top}px`;
+    starClone.style.margin = '0';
+    starClone.style.zIndex = '9999';
+    starClone.style.pointerEvents = 'none';
 
-	document.body.appendChild(starClone);
-	originalStar.style.opacity = '0';
+    document.body.appendChild(starClone);
+    originalStar.style.opacity = '0';
 
-	requestAnimationFrame(() => {
-		starClone.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
-		starClone.style.left = '50%';
-		starClone.style.top = '50%';
-		starClone.style.transform = 'translate(-50%, -50%) scale(2.5) rotate(360deg)';
-		starClone.style.filter = `drop-shadow(0 0 35px ${starData.color})`;
-	});
+    requestAnimationFrame(() => {
+        starClone.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+        starClone.style.left = '50%';
+        starClone.style.top = '50%';
+        starClone.style.transform = 'translate(-50%, -50%) scale(2.5) rotate(360deg)';
+        starClone.style.filter = `drop-shadow(0 0 25px ${starData.color})`;
+        starClone.style.opacity = '0';
 
-	setTimeout(() => {
-		envelopeModal.classList.add('active');
-		resetEnvelopeState();
-
-		starClone.style.opacity = '0';
-		setTimeout(() => {
-			starClone.remove();
-			originalStar.style.opacity = '1';
-		}, 400);
-	}, 750);
+        setTimeout(() => {
+            starClone.remove();
+            envelopeModal.classList.add('active');
+            
+            state = 'closed';
+            envelope.classList.remove('open');
+            letter.classList.remove('extracted', 'returning');
+            resetBtn.classList.remove('visible');
+            instruction.style.display = 'block';
+        }, 800);
+    });
 }
 
-if (envelope) {
-	envelope.addEventListener('click', (e) => {
-		e.stopPropagation();
-		if (state === 'closed') {
-			envelope.classList.add('open');
-			state = 'opened';
-			instruction.textContent = 'Ahora haz clic en la carta para sacarla';
-		}
-	});
-}
+// Manejo de interacción del sobre
+envelope.addEventListener('click', () => {
+    if (state === 'closed') {
+        envelope.classList.add('open');
+        instruction.style.display = 'none';
+        state = 'opened';
 
-if (letter) {
-	letter.addEventListener('click', (e) => {
-		e.stopPropagation();
-		if (state === 'opened') {
-			letter.classList.remove('returning');
-			letter.classList.add('extracted');
-			state = 'extracted';
-			instruction.textContent = 'Haz clic en la carta o en el botón para guardarla';
-			resetBtn.classList.add('visible');
-		} else if (state === 'extracted') {
-			triggerCloseSequence();
-		}
-	});
-}
+        setTimeout(() => {
+            letter.classList.add('extracted');
+            resetBtn.classList.add('visible');
+            state = 'extracted';
+        }, 600);
+    } else if (state === 'extracted') {
+        letter.classList.remove('extracted');
+        letter.classList.add('returning');
+        resetBtn.classList.remove('visible');
 
-if (resetBtn) {
-	resetBtn.addEventListener('click', (e) => triggerCloseSequence(e));
-}
+        setTimeout(() => {
+            envelope.classList.remove('open');
+            letter.classList.remove('returning');
+            instruction.style.display = 'block';
+            state = 'closed';
+        }, 600);
+    }
+});
 
-if (closeModalBtn) {
-	closeModalBtn.addEventListener('click', () => {
-		envelopeModal.classList.remove('active');
-		resetEnvelopeState();
-	});
-}
+// Botones de cierre
+const closeModal = () => {
+    envelopeModal.classList.remove('active');
+    document.querySelectorAll('.container-stars .star').forEach(s => s.style.opacity = '1');
+};
 
-function triggerCloseSequence(e) {
-	if (e) e.stopPropagation();
-	if (state !== 'extracted' && state !== 'opened') return;
+closeModalBtn.addEventListener('click', closeModal);
+resetBtn.addEventListener('click', closeModal);
+envelopeModal.addEventListener('click', (e) => {
+    if (e.target === envelopeModal) closeModal();
+});
 
-	if (state === 'extracted') {
-		state = 'animating';
-		resetBtn.classList.remove('visible');
-		instruction.textContent = 'Guardando carta...';
-
-		letter.classList.remove('extracted');
-		letter.classList.add('returning');
-
-		setTimeout(() => {
-			letter.classList.remove('returning');
-			envelope.classList.remove('open');
-			state = 'closed';
-			instruction.textContent = 'Haz clic en el sobre para abrirlo';
-		}, 800);
-	} else if (state === 'opened') {
-		envelope.classList.remove('open');
-		state = 'closed';
-		instruction.textContent = 'Haz clic en el sobre para abrirlo';
-	}
-}
-
-function resetEnvelopeState() {
-	envelope.classList.remove('open');
-	letter.classList.remove('extracted', 'returning');
-	resetBtn.classList.remove('visible');
-	state = 'closed';
-	instruction.textContent = 'Haz clic en el sobre para abrirlo';
-}
 // ==========================================
-// 5. FONDO DE ESTRELLAS Y ESTRELLAS FUGACES
+// 5. CAJA DE REGALO Y VIDEO INTERACTIVO
 // ==========================================
-function generateStars(count, maxVh) {
-	let stars = [];
-	for (let i = 0; i < count; i++) {
-		const x = Math.floor(Math.random() * 100);
-		// Distribuimos las estrellas aleatoriamente en base a la altura total en píxeles
-		const y = Math.floor(Math.random() * maxVh);
-		const alpha = (Math.random() * 0.6 + 0.4).toFixed(2);
-		stars.push(`${x}vw ${y}px rgba(255, 255, 255, ${alpha})`);
-	}
-	return stars.join(', ');
+const giftBox = document.getElementById('gift-box');
+const videoModal = document.getElementById('video-modal');
+const giftVideo = document.getElementById('gift-video');
+const closeVideoBtn = document.getElementById('closeVideoBtn');
+
+if (giftBox) {
+    giftBox.addEventListener('click', () => {
+        giftBox.classList.add('open');
+
+        // Muestra el modal con la caja abierta, pero NO reproduce automáticamente
+        setTimeout(() => {
+            videoModal.classList.add('active');
+            // Nota: Eliminamos giftVideo.play() para que el usuario decida cuándo darle play
+        }, 500);
+    });
 }
 
-// Creamos dinámicamente el contenedor del fondo si no existe
-const bgStarsContainer = document.createElement('div');
-bgStarsContainer.id = 'bgStars';
-bgStarsContainer.classList.add('bg-stars');
-document.body.insertBefore(bgStarsContainer, document.body.firstChild);
+const closeVideoModal = () => {
+    videoModal.classList.remove('active');
+    giftVideo.pause();
+    giftVideo.currentTime = 0; // Reinicia el video al cerrarlo
 
-// Calculamos la altura total real del documento para que las estrellas cubran todo el scroll
-function updateBgHeight() {
-	const totalHeight = document.documentElement.scrollHeight;
-	bgStarsContainer.style.height = `${totalHeight}px`;
-	
-	// Cantidad de estrellas proporcional a la altura de la página
-	const smallCount = Math.floor(totalHeight / 3);
-	const mediumCount = Math.floor(totalHeight / 6);
+    setTimeout(() => {
+        giftBox.classList.remove('open');
+    }, 400);
+};
 
-	bgStarsContainer.style.setProperty('--stars-small', generateStars(smallCount, totalHeight));
-	bgStarsContainer.style.setProperty('--stars-medium', generateStars(mediumCount, totalHeight));
+if (closeVideoBtn) {
+    closeVideoBtn.addEventListener('click', closeVideoModal);
 }
 
-// Ejecutamos al cargar y si cambia el tamaño de la ventana
-window.addEventListener('load', updateBgHeight);
-window.addEventListener('resize', updateBgHeight);
-
-function createShootingStar() {
-	const star = document.createElement('div');
-	star.classList.add('shooting-star');
-
-	const scrollY = window.scrollY;
-	const viewportHeight = window.innerHeight;
-	const viewportWidth = window.innerWidth;
-
-	const randomTop = scrollY + Math.random() * (viewportHeight * 0.6); 
-	const randomLeft = (viewportWidth * 0.4) + Math.random() * (viewportWidth * 0.5); 
-
-	star.style.top = `${randomTop}px`;
-	star.style.left = `${randomLeft}px`;
-
-	const randomScale = (Math.random() * 0.9 + 0.5).toFixed(2);
-	star.style.setProperty('--star-scale', randomScale);
-
-	star.innerHTML = `
-		<svg width="150" height="50" viewBox="0 0 150 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<defs>
-				<linearGradient id="tailGrad10" x1="0%" y1="100%" x2="100%" y2="0%">
-					<stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
-					<stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
-				</linearGradient>
-			</defs>
-			<line x1="10" y1="33" x2="140" y2="0" stroke="url(#tailGrad10)" stroke-width="1.5" stroke-linecap="round"/>
-			<circle cx="10" cy="33" r="2" fill="#ffffff" />
-		</svg>
-	`;
-
-	bgStarsContainer.appendChild(star);
-
-	setTimeout(() => {
-		star.remove();
-	}, 1500);
+if (videoModal) {
+    videoModal.addEventListener('click', (e) => {
+        if (e.target === videoModal) closeVideoModal();
+    });
 }
-
-function scheduleNextShootingStar() {
-	const randomTime = Math.random() * 2000 + 2000;
-	setTimeout(() => {
-		createShootingStar();
-		scheduleNextShootingStar();
-	}, randomTime);
-}
-
-scheduleNextShootingStar();
